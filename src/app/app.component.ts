@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { ApiClientService, Author } from './api-client.service';
+import { ReplaySubject, Subject } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
+import { ApiClientService, Author } from './services/api-client.service';
+
 
 @Component({
   selector: 'app-root',
@@ -9,19 +12,27 @@ import { ApiClientService, Author } from './api-client.service';
 export class AppComponent
 {
   public authors: Author[] = [];
+
+
   constructor(public apiClientService: ApiClientService)
   {
-    apiClientService.GetAllAuthor().subscribe(
-      results =>
-      {
-        this.authors = results;
-      },
-      error =>
-      {
-        console.log(error);
+    //Date.prototype.toJSON=function(){ return moment(this).format(); }
 
-      }
-    );
+
+
+    for (let i = 0; i < 100; i++)
+      apiClientService.GetAllAuthor().subscribe(
+        results =>
+        {
+          this.authors = results;
+        },
+        error =>
+        {
+          console.log(error);
+
+        }
+      );
+
     // apiClientService.GetAuthorById(1).subscribe(
     //   results =>
     //   {
@@ -32,6 +43,8 @@ export class AppComponent
 
     //   }
     // );
+
+
 
   }
 }
